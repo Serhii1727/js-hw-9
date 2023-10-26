@@ -17,6 +17,10 @@ const startChangeColorBody = () => {
         refs.body.style.backgroundColor = color;
     }, 1000)
 
+    if (refs.btnStop.disabled) {
+        refs.btnStop.disabled = false;
+    } 
+
     refs.btnStart.disabled = true;
 }
 
