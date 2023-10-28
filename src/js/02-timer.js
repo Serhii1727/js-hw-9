@@ -3,11 +3,7 @@ import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import convertMs from "./timer-convert";
 
-const input = document.querySelector('#datetime-picker');
-
-console.log(input)
-
-refs = {
+const refs = {
     input: document.querySelector('#datetime-picker'),
     button: document.querySelector('button[data-start]'),
     spanDays: document.querySelector('span[data-days]'),
@@ -46,7 +42,7 @@ const options = {
   },
 };
 
-flatpickr(input, options)
+flatpickr(refs.input, options)
 
 const addLeadingZero = (value) => {
 
