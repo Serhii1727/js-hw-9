@@ -44,8 +44,11 @@ const options = {
 flatpickr(refs.input, options)
 
 const startTimer = () => {
-    console.log('Hello')
+    console.log('Hello Log')
+
 }
+
+
 
 refs.button.addEventListener('click', startTimer)
 
