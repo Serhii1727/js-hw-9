@@ -14,6 +14,7 @@ refs = {
 
 refs.button.disabled = true;
 let deltaTime = null;
+let intervalId = null;
 
 const options = {
   enableTime: true,
@@ -31,21 +32,43 @@ const options = {
         }
 
         deltaTime = selectedDates[0].getTime() - options.defaultDate.getTime()
+        
 
         const { days, hours, minutes, seconds } = convertMs(deltaTime);
         refs.spanDays.textContent = days;
         refs.spanHours.textContent = hours;
         refs.spanMinutes.textContent = minutes;
         refs.spanSeconds.textContent = seconds;
-
   },
 };
 
 flatpickr(refs.input, options)
 
-const startTimer = () => {
-    console.log('Hello Log')
+const addLeadingZero = (value) => {
 
+}
+
+const startTimer = () => {
+    
+    intervalId = setInterval(() => {
+        deltaTime = deltaTime - 1000;
+        const { days, hours, minutes, seconds } = convertMs(deltaTime);
+        refs.spanDays.textContent = days;
+        refs.spanHours.textContent = hours;
+        refs.spanMinutes.textContent = minutes;
+        refs.spanSeconds.textContent = seconds;
+
+        if (Number(refs.spanDays.textContent) === 0 && Number(refs.spanHours.textContent) === 0 && Number(refs.spanMinutes.textContent) === 0 && Number(refs.spanSeconds.textContent) === 0) {
+            clearInterval(intervalId);
+            return;
+        }
+        
+        console.log(convertMs(deltaTime))
+    }, 1000)
+
+    if (Number(refs.spanDays.textContent) === 0 && Number(refs.spanHours.textContent) === 0 && Number(refs.spanMinutes.textContent) === 0 && Number(refs.spanSeconds.textContent) === 0) {
+        clearInterval(intervalId);
+    }
 }
 
 
