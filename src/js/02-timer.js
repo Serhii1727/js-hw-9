@@ -16,6 +16,13 @@ refs.button.disabled = true;
 let deltaTime = null;
 let intervalId = null;
 
+const addLeadingZero = (value) => {
+    if (value.length > 2) {
+        return value.padStart(value.length)
+    }
+    return value.padStart(2, "0")
+}
+
 const options = {
   enableTime: true,
   time_24hr: true,
@@ -33,45 +40,32 @@ const options = {
 
         deltaTime = selectedDates[0].getTime() - options.defaultDate.getTime()
         
-
         const { days, hours, minutes, seconds } = convertMs(deltaTime);
-        refs.spanDays.textContent = days;
-        refs.spanHours.textContent = hours;
-        refs.spanMinutes.textContent = minutes;
-        refs.spanSeconds.textContent = seconds;
+        refs.spanDays.textContent = addLeadingZero(days.toString());
+        refs.spanHours.textContent = addLeadingZero(hours.toString());
+        refs.spanMinutes.textContent = addLeadingZero(minutes.toString());
+        refs.spanSeconds.textContent = addLeadingZero(seconds.toString());
   },
 };
 
 flatpickr(refs.input, options)
-
-const addLeadingZero = (value) => {
-
-}
 
 const startTimer = () => {
     
     intervalId = setInterval(() => {
         deltaTime = deltaTime - 1000;
         const { days, hours, minutes, seconds } = convertMs(deltaTime);
-        refs.spanDays.textContent = days;
-        refs.spanHours.textContent = hours;
-        refs.spanMinutes.textContent = minutes;
-        refs.spanSeconds.textContent = seconds;
+        
+        refs.spanDays.textContent = addLeadingZero(days.toString());
+        refs.spanHours.textContent = addLeadingZero(hours.toString());
+        refs.spanMinutes.textContent = addLeadingZero(minutes.toString());
+        refs.spanSeconds.textContent = addLeadingZero(seconds.toString());
 
         if (Number(refs.spanDays.textContent) === 0 && Number(refs.spanHours.textContent) === 0 && Number(refs.spanMinutes.textContent) === 0 && Number(refs.spanSeconds.textContent) === 0) {
             clearInterval(intervalId);
             return;
-        }
-        
-        console.log(convertMs(deltaTime))
-    }, 1000)
-
-    if (Number(refs.spanDays.textContent) === 0 && Number(refs.spanHours.textContent) === 0 && Number(refs.spanMinutes.textContent) === 0 && Number(refs.spanSeconds.textContent) === 0) {
-        clearInterval(intervalId);
-    }
+        }}, 1000)   
 }
-
-
 
 refs.button.addEventListener('click', startTimer)
 
