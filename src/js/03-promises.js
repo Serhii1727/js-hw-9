@@ -5,53 +5,60 @@ const refs = {
   button: document.querySelector('button'),
 }
 
-let intervalId = null;
-let counter = 0;
-
 const createObjectDataInput = () => {
 
-  const obj = {
+  const objDataInput = {
     delay: refs.form.elements.delay.value,
     step: refs.form.elements.step.value,
     amount: refs.form.elements.amount.value,
   }
-
-  return obj;
+  return objDataInput;
 }
 
 const promises = (event) => {
   event.preventDefault()
-  const { delay, step, amount } = createObjectDataInput()
 
+  let intervalId = null;
+  let position = 0;
 
+  const { delay, step, amount } = createObjectDataInput() 
 
-  intervalId = setInterval(() => {
-    counter += 1; 
-    let currentPosition = 1;
+  let currentTimeDonePromise = Number(delay);
+  let currentStepInterval = delay;
 
+  
+  
+  
+intervalId = setInterval(() => {
+    position += 1;
 
-    createPromise(amount, delay)
-    .then(({ position, delay }) => {
-    Notiflix.Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
-  })
-  .catch(({ position, delay }) => {
-    Notiflix.Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
-  });
-    currentPosition += 1;
+    createPromise(position, currentTimeDonePromise)
+      .then(({ position, currentTimeDonePromise }) => {
+        Notiflix.Notify.success(`✅ Fulfilled promise ${position} in ${currentTimeDonePromise}ms`);
+      })
+      .catch(({ position, currentTimeDonePromise }) => {
+        Notiflix.Notify.failure(`❌ Rejected promise ${position} in ${currentTimeDonePromise}ms`);
+      });
     
-    if(counter === Number(amount)) {
+    
+      currentTimeDonePromise += Number(step);
+      currentStepInterval = Number(step);
+
+    if (position === Number(amount)) {
       clearInterval(intervalId)
-      return
-    }
-    
-  }, step);
+      position = 0;
+      return;
+    } 
 
+    
+  }, currentStepInterval);
+  
 }
 
 refs.form.addEventListener('input', createObjectDataInput)
 refs.form.addEventListener('submit', promises)
 
-function createPromise(position, delay) {
+function createPromise(position, currentTimeDonePromise) {
 
   const shouldResolve = Math.random() > 0.3;
   
@@ -59,14 +66,16 @@ function createPromise(position, delay) {
     if (shouldResolve) {
       resolve({
         position,
-        delay
-    })
+        currentTimeDonePromise,
+      }) 
   } else {
       reject({
-      position, delay
+        position,
+        currentTimeDonePromise,
     })
   }
   })
-  console.log(promise)
   return promise;
 }
+
+
