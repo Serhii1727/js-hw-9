@@ -18,64 +18,43 @@ const createObjectDataInput = () => {
 const promises = (event) => {
   event.preventDefault()
 
-  let intervalId = null;
-  let position = 0;
-
   const { delay, step, amount } = createObjectDataInput() 
+  let delayTime = Number(delay);
 
-  let currentTimeDonePromise = Number(delay);
-  let currentStepInterval = delay;
-
-  
-  
-  
-intervalId = setInterval(() => {
-    position += 1;
-
-    createPromise(position, currentTimeDonePromise)
-      .then(({ position, currentTimeDonePromise }) => {
-        Notiflix.Notify.success(`✅ Fulfilled promise ${position} in ${currentTimeDonePromise}ms`);
+  for (let i = 1; i <= amount; i += 1) {
+    position = i;
+    createPromise(position, delayTime)
+      .then(({ position, delayTime }) => {
+        Notiflix.Notify.success(`✅ Fulfilled promise ${position} in ${delayTime}ms`);
       })
-      .catch(({ position, currentTimeDonePromise }) => {
-        Notiflix.Notify.failure(`❌ Rejected promise ${position} in ${currentTimeDonePromise}ms`);
+      .catch(({ position, delayTime }) => {
+        Notiflix.Notify.failure(`❌ Rejected promise ${position} in ${delayTime}ms`);
       });
     
-    
-      currentTimeDonePromise += Number(step);
-      currentStepInterval = Number(step);
+    delayTime += Number(step)
+  }}
 
-    if (position === Number(amount)) {
-      clearInterval(intervalId)
-      position = 0;
-      return;
-    } 
-
-    
-  }, currentStepInterval);
-  
-}
-
-refs.form.addEventListener('input', createObjectDataInput)
-refs.form.addEventListener('submit', promises)
-
-function createPromise(position, currentTimeDonePromise) {
+function createPromise(position, delayTime) {
 
   const shouldResolve = Math.random() > 0.3;
   
   const promise = new Promise((resolve, reject) => {
-    if (shouldResolve) {
+    setTimeout(() => {
+       if (shouldResolve) {
       resolve({
         position,
-        currentTimeDonePromise,
+        delayTime,
       }) 
   } else {
       reject({
         position,
-        currentTimeDonePromise,
+        delayTime,
     })
-  }
+  }}, delayTime)
+   
   })
   return promise;
 }
 
-
+refs.form.addEventListener('input', createObjectDataInput)
+refs.form.addEventListener('submit', promises)
